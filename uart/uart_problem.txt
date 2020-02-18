@@ -1,0 +1,16 @@
+[GENERAL]
+model_files: uart.v[uart_tx],uart.ets
+clock_behaviors: DetClock(CLK, 1)
+assume_if_true: True
+
+[DEFAULT]
+bmc_length: 25
+strategy: ALL
+
+[Problem 0]
+assumptions: (ets_state != 2_3) -> (valid = 0_1)
+# properties: (ets_state = 2_3) -> (tx = 0_1); (ets_state = 1_3) -> (tx = 1_1)
+properties: (ets_state = 2_3) -> (tx = 0_1)
+verification: safety
+prove: True
+expected: True
