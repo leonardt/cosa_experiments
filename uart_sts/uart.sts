@@ -1,0 +1,20 @@
+VAR
+sts_state: BV(3);
+count: BV(3);
+
+INIT
+sts_state = 0_3;
+count = 0_3;
+
+TRANS
+(posedge(CLK) & !posedge(RESET) & (valid = 1_1) & (sts_state = 0_3)) ->  (next(sts_state) = 1_3);
+(posedge(CLK) & !posedge(RESET) & (valid = 0_1) & (sts_state = 0_3)) ->  (next(sts_state) = sts_state);
+(!posedge(CLK) & !posedge(RESET)) ->  (next(sts_state) = sts_state);
+(!posedge(CLK) & !posedge(RESET)) ->  (next(count) = count);
+(posedge(CLK) & !posedge(RESET) & !(sts_state = 1_3)) ->  (next(count) = count);
+posedge(RESET) -> next(sts_state) = 0_3;
+posedge(RESET) -> next(count) = 0_3;
+(posedge(CLK) & !posedge(RESET) & (sts_state = 1_3)) -> (next(count) = count + 1_3);
+(posedge(CLK) & !posedge(RESET) & (sts_state = 1_3) & !(count = 7_3)) ->  (next(sts_state) = sts_state);
+(posedge(CLK) & !posedge(RESET) & (sts_state = 1_3) & (count = 7_3)) ->  (next(sts_state) = 2_3);
+(posedge(CLK) & !posedge(RESET) & (sts_state = 2_3)) ->  (next(sts_state) = 0_3);
